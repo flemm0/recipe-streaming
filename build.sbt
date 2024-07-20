@@ -12,6 +12,8 @@ lazy val root = project
       "org.scalameta" %% "munit" % "1.0.0" % Test,
 	    "org.apache.kafka" % "kafka-clients" % "3.7.1",
 	    "com.softwaremill.sttp.client4" %% "core" % "4.0.0-M6",
-      "com.lihaoyi" %% "upickle" % "3.1.0"
+      "com.lihaoyi" %% "upickle" % "3.1.0",
+      "ch.qos.logback" % "logback-classic" % "1.2.11",
+      "org.slf4j" % "slf4j-api" % "1.7.36"
     )
   )
