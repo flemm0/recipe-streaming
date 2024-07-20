@@ -7,17 +7,18 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.util.Properties
 
 
-def fetchRandomMeal(): Unit = 
+def fetchRandomMeal(): String = 
   val response: Response[String] = quickRequest
     .get(uri"https://www.themealdb.com/api/json/v1/1/random.php")
     .send()
 
   if response.code == StatusCode.Ok then
     val json = ujson.read(response.body)
-    val meals = json("meals")
-    println(meals)
+    val meal: String = json("meals")(0).toString()
+    meal
   else
     println(s"Failed to get response")
+    ""
 
 
 def sendMessage(topic: String, key: String, value: String): Unit =
@@ -35,5 +36,6 @@ def sendMessage(topic: String, key: String, value: String): Unit =
 
 
 @main def main(): Unit =
-  fetchRandomMeal()
-  sendMessage(topic="test", key="breakfast", value="Hello World!")
+  val meal = fetchRandomMeal()
+  println(meal)
+  // sendMessage(topic="test", key="breakfast", value="Hello World!")
