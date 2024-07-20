@@ -2,6 +2,10 @@ import sttp.client4.quick.*
 import sttp.client4.Response
 import sttp.model.StatusCode
 
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+import org.apache.kafka.common.serialization.StringSerializer
+import java.util.Properties
+
 
 def fetchRandomMeal(): Unit = 
   val response: Response[String] = quickRequest
@@ -16,5 +20,20 @@ def fetchRandomMeal(): Unit =
     println(s"Failed to get response")
 
 
+def sendMessage(topic: String, key: String, value: String): Unit =
+  val props = new Properties()
+  props.put("bootstrap.servers", "localhost:29092")
+  props.put("key.serializer", classOf[StringSerializer].getName)
+  props.put("value.serializer", classOf[StringSerializer].getName)
+
+  val producer = new KafkaProducer[String, String](props)
+  try
+    producer.send(new ProducerRecord[String, String](topic, key, value))
+    println(s"Message [$key -> $value] sent to topic [$topic]")
+  finally
+    producer.close()
+
+
 @main def main(): Unit =
   fetchRandomMeal()
+  sendMessage(topic="test", key="breakfast", value="Hello World!")
